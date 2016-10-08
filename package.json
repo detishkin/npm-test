@@ -4,17 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {    
-    "precompile-sass": "mkdirp dist/assets",
-    "compile-sass": "node-sass src/styles/index.sass > dist/assets/bundle.css",
-    "postcompile-sass": "postcss --use autoprefixer dist/assets/bundle.css -d dist/assets",
-    "precopy-html": "mkdirp dist",
+    "mkdir": "mkdirp dist/assets",
+
+    "precompile-sass": "npm run mkdir",
+    "compile-sass": "node-sass src/styles/index.sass > dist/assets/index.css",
+    "postcompile-sass": "postcss --use autoprefixer dist/assets/index.css -d dist/assets",
+    "watch-sass": "node-sass --watch --output dist/assets --source-map true --source-map-contents src/styles",
+    "precopy-html": "npm run mkdir",
     "copy-html": "cp src/index.html dist/index.html",
 
-    "preconcat-js": "mkdirp dist/assets",
-    "concat-js": "cat node_modules/jquery/dist/jquery.min.js src/scripts/index.js > dist/assets/bundle.js",
+    "preconcat-js": "npm run mkdir",
+    "concat-js": "browserify src/scripts/index.js -o dist/assets/bundle.js",
 
+    "prewatch-js": "npm run mkdir",
+    "watch-js": "watchify src/scripts/index.js -o dist/assets/bundle.js",
+
+    "watch": "npm run watch-sass | npm run watch-js",
     "build": "npm run copy-html && npm run compile-sass && npm run concat-js",
-    "view": "http-server dist"
+    "view": "http-server dist"    
   },
   "keywords": [
     "npm"
@@ -23,10 +30,12 @@
   "license": "ISC",
   "devDependencies": {
     "autoprefixer": "^6.5.0",
+    "browserify": "^13.1.0",
     "http-server": "^0.9.0",
     "mkdirp": "^0.5.1",
     "node-sass": "^3.10.1",
-    "postcss-cli": "^2.6.0"
+    "postcss-cli": "^2.6.0",
+    "watchify": "^3.7.0"
   },
   "dependencies": {
     "jquery": "^3.1.1"
